@@ -16,7 +16,7 @@ public class ClienteDAO {
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEndereco());
-            stmt.setInt(3, cliente.getCpf());
+            stmt.setString(3, cliente.getCpf());
             stmt.executeUpdate();
         }
     }
@@ -32,7 +32,7 @@ public class ClienteDAO {
                 c.setIdCliente(rs.getInt("id_cliente"));
                 c.setNome(rs.getString("nome"));
                 c.setEndereco(rs.getString("endereco"));
-                c.setCpf(rs.getInt("cpf"));
+                c.setCpf(rs.getString("cpf"));
                 clientes.add(c);
             }
         }
@@ -55,7 +55,7 @@ public class ClienteDAO {
                     c.setIdCliente(rs.getInt("id_cliente"));
                     c.setNome(rs.getString("nome"));
                     c.setEndereco(rs.getString("endereco"));
-                    c.setCpf(rs.getInt("cpf"));
+                    c.setCpf(rs.getString("cpf"));
                 }
             }
         } 

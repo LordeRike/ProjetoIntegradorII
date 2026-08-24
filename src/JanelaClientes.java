@@ -172,12 +172,10 @@ public class JanelaClientes extends JFrame {
         }
 
         try {
-            
-            int cpf2 = Integer.parseInt(txtCpf.getText());
             Cliente cliente = new Cliente();
             cliente.setNome(nome);
             cliente.setEndereco(endereco);
-            cliente.setCpf(cpf2);
+            cliente.setCpf(cpf);
 
             if (txtId.getText().isEmpty()) {
                 // Inserir novo cliente (CREATE)

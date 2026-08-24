@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\ANDERSONVAGNERDASILV\\Downloads\\postgresql-42.7.9.jar",
+        "c:\\Users\\HENRIQUEDACOSTAAZERE\\Downloads\\postgresql-42.7.11.jar"
+    ]
+}

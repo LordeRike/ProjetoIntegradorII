@@ -45,7 +45,7 @@ public class JanelaMenu extends JFrame {
         btnProduto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                abrirCadastroProduto();
+                abrirCadastroProduto(conexao);
             }
         });
 
@@ -73,8 +73,11 @@ public class JanelaMenu extends JFrame {
                 });       
     }
 
-    private void abrirCadastroProduto() {
-        JOptionPane.showMessageDialog(this, "Abre a tela de Cadastro de Produto (Ainda não implementado). ", "Cadastro de Produto", JOptionPane.INFORMATION_MESSAGE);
+    private void abrirCadastroProduto(Connection conexao) {
+        SwingUtilities.invokeLater(() -> {
+            JanelaProduto telaGrid = new JanelaProduto(conexao);
+            telaGrid.setVisible(true);
+           });
     }
 
     private void fecharPrograma() {

@@ -21,6 +21,10 @@ public class ProdutoDAO {
     public List<Produto> listarTodos() throws SQLException{
         List<Produto> produtos = new ArrayList<>();
         String sql = "SELECT * FROM produto ORDER BY id_produto";
+        /*SELECT produto.*, categoria_produto.id_categoria_produto, categoria_produto.decricao_categoria_produto
+            FROM produto 
+            JOIN categoria_produto
+            ON produto.categoria_produto_id_categoria_produto = categoria_produto.id_categoria_produto; */
         try (PreparedStatement stmt = conexao.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {

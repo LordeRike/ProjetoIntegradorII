@@ -7,22 +7,22 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class JanelaProduto extends JFrame {
+public class JanelaCategoria extends JFrame {
+    
     private JTable tabela;
     private DefaultTableModel modeloTabela;
-    private ProdutoDAO produtoDAO;
+    private CategoriaDAO categoriaDAO;
 
-    private JTextField txtIdP;
-    private JTextField txtNomeP;
-    private JTextField txtCatP;
+    private JTextField txtId;
+    private JTextField txtDescricao;
 
     private JButton btnSalvar;
     private JButton btnExcluir;
     private JButton btnLimpar;
 
-    public JanelaProduto(Connection conexao) {
-        super("Gerenciamento de Produtos (CRUD)");
-        this.produtoDAO = new ProdutoDAO(conexao);
+    public JanelaCategoria(Connection conexao) {
+        super("Gerenciamento de Categoria (CRUD)");
+        this.categoriaDAO = new CategoriaDAO(conexao);
 
         setSize(850, 450);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -33,18 +33,20 @@ public class JanelaProduto extends JFrame {
     }
 
     private void inicializarComponentes() {
-        String[] colunas = {"ID", "Nome", "ID Categoria", "Descrição Categoria"};
+        // --- 1. CONFIGURAÇÃO DA TABELA (ESQUERDA) ---
+        String[] colunas = {"ID", "Descrição"};
         modeloTabela = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return false; // Células não editáveis diretamente no grid
             }
         };
 
         tabela = new JTable(modeloTabela);
-        tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Permite selecionar apenas 1 linha por vez
         JScrollPane scrollPane = new JScrollPane(tabela);
 
+        // Listener para preencher os campos de texto ao clicar numa linha da tabela
         tabela.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -55,7 +57,7 @@ public class JanelaProduto extends JFrame {
         });
 
         JPanel painelFormulario = new JPanel(new GridBagLayout());
-        painelFormulario.setBorder(BorderFactory.createTitledBorder("Dados do produto"));
+        painelFormulario.setBorder(BorderFactory.createTitledBorder("Dados do categoria"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
@@ -63,23 +65,17 @@ public class JanelaProduto extends JFrame {
 
         gbc.gridx = 0; gbc.gridy = 0;
         painelFormulario.add(new JLabel("ID:"), gbc);
-        txtIdP = new JTextField(5);
-        txtIdP.setEditable(false);
-        txtIdP.setFocusable(false);
+        txtId = new JTextField(5);
+        txtId.setEditable(false);
+        txtId.setFocusable(false);
         gbc.gridx = 1; gbc.gridy = 0;
-        painelFormulario.add(txtIdP, gbc);
+        painelFormulario.add(txtId, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        painelFormulario.add(new JLabel("Nome:"), gbc);
-        txtNomeP = new JTextField(20);
+        painelFormulario.add(new JLabel("Descricao:"), gbc);
+        txtDescricao = new JTextField(20);
         gbc.gridx = 1; gbc.gridy = 1;
-        painelFormulario.add(txtNomeP, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2;
-        painelFormulario.add(new JLabel("Categoria:"), gbc);
-        txtCatP = new JTextField(20);
-        gbc.gridx = 1; gbc.gridy = 2;
-        painelFormulario.add(txtCatP, gbc);
+        painelFormulario.add(txtDescricao, gbc);
 
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnSalvar = new JButton("Salvar");
@@ -90,38 +86,38 @@ public class JanelaProduto extends JFrame {
         painelBotoes.add(btnExcluir);
         painelBotoes.add(btnLimpar);
 
-        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridx = 0; gbc.gridy = 2;
         gbc.gridwidth = 2;
         painelFormulario.add(painelBotoes, gbc);
 
-        btnSalvar.addActionListener(e -> salvarProduto());
-        btnExcluir.addActionListener(e -> excluirProduto());
+        btnSalvar.addActionListener(e -> salvarCategoria());
+        btnExcluir.addActionListener(e -> excluirCategoria());
         btnLimpar.addActionListener(e -> limparCampos());
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, painelFormulario);
-        splitPane.setDividerLocation(420);
+        splitPane.setDividerLocation(420); // Posição inicial do divisor entre a tabela e o formulário
         splitPane.setResizeWeight(0.5);
 
         setLayout(new BorderLayout());
         add(splitPane, BorderLayout.CENTER);
+        
     }
 
     public void carregarDadosTabela() {
         modeloTabela.setRowCount(0);
         try {
-            List<Produto> lista = produtoDAO.listarTodos();
-            for (Produto p : lista) {
+            List<Categoria> lista = categoriaDAO.listarTodos();
+            for (Categoria cat : lista) {
                 Object[] linha = {
-                    p.getId_produto(),
-                    p.getNome_produto(),
-                    p.getCategoria_produto(),
-                    p.getDescricao_categoria()
+                    cat.getId_categoria_produto(),
+                    cat.getDescricao_categoria_produto(),
+
                 };
                 modeloTabela.addRow(linha);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, 
-                "Erro ao carregar os produto:\n" + e.getMessage(), 
+                "Erro ao carregar as categorias cadastradas:\n" + e.getMessage(), 
                 "Erro", 
                 JOptionPane.ERROR_MESSAGE);
         }
@@ -130,79 +126,74 @@ public class JanelaProduto extends JFrame {
     private void preencherCamposComLinhaSelecionada() {
         int linhaSelecionada = tabela.getSelectedRow();
         if (linhaSelecionada != -1) {
-            txtIdP.setText(modeloTabela.getValueAt(linhaSelecionada, 0).toString());
-            txtNomeP.setText(modeloTabela.getValueAt(linhaSelecionada, 1).toString());
-            txtCatP.setText(modeloTabela.getValueAt(linhaSelecionada, 2).toString());
+            txtId.setText(modeloTabela.getValueAt(linhaSelecionada, 0).toString());
+            txtDescricao.setText(modeloTabela.getValueAt(linhaSelecionada, 1).toString());
         }
     }
 
-    private void salvarProduto() {
-        String nomeP = txtNomeP.getText().trim();
-        String catP = txtCatP.getText().trim();
+    private void salvarCategoria() {
+        String descricao = txtDescricao.getText().trim();
 
-        if (nomeP.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe o nome do produto.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        if (descricao.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe a descrição da categoria.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
-            Produto produto = new Produto();
-            int catP2 = Integer.parseInt(txtCatP.getText());
-            produto.setNome_produto(nomeP);
-            produto.setCategoria_produto(catP2);;
+            Categoria categoria = new Categoria();
+            categoria.setDescricao_categoria_produto(descricao);
 
-            if (txtIdP.getText().isEmpty()) {
-                // Inserir novo produto (CREATE)
-                produtoDAO.inserir(produto);
-                JOptionPane.showMessageDialog(this, "produto inserido com sucesso!");
+            if (txtId.getText().isEmpty()) {
+                // Inserir novo categoria (CREATE)
+                categoriaDAO.inserir(categoria);
+                JOptionPane.showMessageDialog(this, "categoria inserida com sucesso!");
             } else {
-                // Atualizar produto existente (UPDATE)
-                produto.setId_produto(Integer.parseInt(txtIdP.getText()));
-                produtoDAO.atualizar(produto);
-                JOptionPane.showMessageDialog(this, "produto atualizado com sucesso!");
+                // Atualizar categoria existente (UPDATE)
+                categoria.setId_categoria_produto(Integer.parseInt(txtId.getText()));
+                categoriaDAO.atualizar(categoria);
+                JOptionPane.showMessageDialog(this, "categoria atualizada com sucesso!");
             }
 
             limparCampos();
             carregarDadosTabela();
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar produto:\n" + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        
+            JOptionPane.showMessageDialog(this, "Erro ao salvar categoria:\n" + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void excluirProduto() {
-        if (txtIdP.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Selecione um produto na tabela para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    private void excluirCategoria() {
+        if (txtId.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Selecione uma categoria na tabela para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         int confirmacao = JOptionPane.showConfirmDialog(
             this,
-            "Tem certeza que deseja excluir este produto?",
+            "Tem certeza que deseja excluir esta categoria?",
             "Confirmação de Exclusão",
             JOptionPane.YES_NO_OPTION
         );
 
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                int id = Integer.parseInt(txtIdP.getText());
-                produtoDAO.excluir(id);
-                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!");
+                int id = Integer.parseInt(txtId.getText());
+                categoriaDAO.excluir(id);
+                JOptionPane.showMessageDialog(this, "Categoria excluída com sucesso!");
 
                 limparCampos();
                 carregarDadosTabela();
 
             } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Erro ao excluir produto:\n" + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Erro ao excluir categoria:\n" + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void limparCampos() {
-        txtIdP.setText("");
-        txtNomeP.setText("");
-        txtCatP.setText("");
+        txtId.setText("");
+        txtDescricao.setText("");
         tabela.clearSelection();
     }
+
 }

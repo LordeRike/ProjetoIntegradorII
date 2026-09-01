@@ -13,25 +13,26 @@ public class ProdutoDAO {
         String sql = "INSERT INTO produto(nome_produto, categoria_produto_id_categoria_produto) VALUES (?, ?);";
         try(PreparedStatement stmt = conexao.prepareStatement(sql)){
             stmt.setString(1, produto.getNome_produto());
-            stmt.setInt(1, produto.getCategoria_produto());
+            stmt.setInt(2, produto.getCategoria_produto());
             stmt.executeUpdate();
         }
     }
 
     public List<Produto> listarTodos() throws SQLException{
         List<Produto> produtos = new ArrayList<>();
-        String sql = "SELECT * FROM produto ORDER BY id_produto";
-        /*SELECT produto.*, categoria_produto.id_categoria_produto, categoria_produto.decricao_categoria_produto
-            FROM produto 
-            JOIN categoria_produto
-            ON produto.categoria_produto_id_categoria_produto = categoria_produto.id_categoria_produto; */
+        //String sql = "SELECT * FROM produto ORDER BY id_produto";
+        String sql = "SELECT p.id_produto, p.nome_produto, p.categoria_produto_id_categoria_produto, c.decricao_categoria_produto\r\n" + //
+                        "\tFROM produto p\r\n" + //
+                        "\tINNER JOIN categoria_produto c  ON p.categoria_produto_id_categoria_produto = c.id_categoria_produto;";
+                        
         try (PreparedStatement stmt = conexao.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Produto p = new Produto();
                 p.setId_produto(rs.getInt("id_produto"));
                 p.setNome_produto(rs.getString("nome_produto"));
-                p.setCategoria_produto(rs.getInt("categoria_produto"));
+                p.setCategoria_produto(rs.getInt("categoria_produto_id_categoria_produto"));
+                p.setDescricao_categoria(rs.getString("decricao_categoria_produto"));
                 produtos.add(p);
             }
         }

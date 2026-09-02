@@ -14,6 +14,7 @@ Registro da venda manterá informações de data (para consulta de período), pr
 POSSIVELMENTE: registro de estoque por compartimentação (prateleiras que manterão registro de quais produtos contêm e seus saldos, isso potencialmente afetará o pertencimento de alguns dados, como saldo em estoque e precisaria ser alterado conforme venda)
 
 
+
 Matriz escopo
 
 

@@ -1,18 +1,22 @@
-## Getting Started
+Sistema de gerenciamento de estoque farmacêutico
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
-## Folder Structure
+Participantes: Henrique da Costa Azeredo e João Guilherme da Silva Sant’ Ana
 
-The workspace contains two folders by default, where:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Detalhamento da proposta: Um sistema ERD que controle a gestão do estoque de uma farmácia. Serão registradas informações de entrada de produto (para que entradas possam ser consultadas independentemente de estoque), produto com detalhamento de identificação, fornecedor, venda e cliente. A proposta se mantém com ênfase no estoque, mas possuindo registro de saída de materiais através de venda.
+Serão incorporados:
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+Relatórios de entrada e venda;
+Cadastro de fornecedor, produto e cliente e registro da entrada
+Registro da venda manterá informações de data (para consulta de período), produto e cliente;
+POSSIVELMENTE: registro de estoque por compartimentação (prateleiras que manterão registro de quais produtos contêm e seus saldos, isso potencialmente afetará o pertencimento de alguns dados, como saldo em estoque e precisaria ser alterado conforme venda)
 
-## Dependency Management
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Matriz escopo
+
+
+
+Esquema ERD 
+

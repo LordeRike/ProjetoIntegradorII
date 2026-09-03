@@ -33,7 +33,7 @@ public class CategoriaDAO {
     }
 
     public void atualizar(Categoria categoria) throws SQLException {
-        String sql = "UPDATE categoria_produto SET descricao_categoria_produto= ? WHERE id_categoria_produto = ?;";
+        String sql = "UPDATE categoria_produto SET decricao_categoria_produto =? WHERE id_categoria_produto =?;";
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setString(1, categoria.getDescricao_categoria_produto());
             stmt.setInt(2, categoria.getId_categoria_produto());

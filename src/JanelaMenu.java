@@ -16,7 +16,7 @@ public class JanelaMenu extends JFrame {
 
         // Painel principal com layout de grade (4 linhas, 1 coluna)
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1, 10, 15));
+        panel.setLayout(new GridLayout(6, 1, 10, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         // Título/Cabeçalho
@@ -28,12 +28,14 @@ public class JanelaMenu extends JFrame {
         JButton btnCliente = new JButton("Cadastro de Cliente");
         JButton btnProduto = new JButton("Cadastro de Produto");
         JButton btnCategoria = new JButton("Cadastro Categoria");
+        JButton btnEntrada = new JButton("Cadastro Entradas");
         JButton btnSair = new JButton("Sair");
 
         // Personalização visual simples (opcional)
         btnCliente.setFocusable(false);
         btnProduto.setFocusable(false);
         btnCategoria.setFocusable(false);
+        btnEntrada.setFocusable(false);
         btnSair.setFocusable(false);
 
         // Adicionando ações aos botões
@@ -65,10 +67,18 @@ public class JanelaMenu extends JFrame {
             }
         });
 
+        btnEntrada.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirCadastroEntrada(conexao);
+            }
+        });
+
         // Adiciona os botões ao painel
         panel.add(btnCliente);
         panel.add(btnProduto);
         panel.add(btnCategoria);
+        panel.add(btnEntrada);
         panel.add(btnSair);
 
         // Adiciona o painel à janela
@@ -93,6 +103,13 @@ public class JanelaMenu extends JFrame {
     private void abrirCadastroCategoria(Connection conexao) {
         SwingUtilities.invokeLater(() -> {
                  JanelaCategoria telaGrid = new JanelaCategoria(conexao);
+                 telaGrid.setVisible(true);
+                });       
+    }
+
+    private void abrirCadastroEntrada(Connection conexao) {
+        SwingUtilities.invokeLater(() -> {
+                 JanelaEntrada telaGrid = new JanelaEntrada(conexao);
                  telaGrid.setVisible(true);
                 });       
     }

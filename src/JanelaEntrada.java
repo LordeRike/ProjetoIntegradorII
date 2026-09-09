@@ -168,7 +168,7 @@ public class JanelaEntrada extends JFrame {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar produto:\n" + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         
-        }
+        } 
     }
 
     private void excluirEntrada() {

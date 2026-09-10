@@ -16,7 +16,7 @@ public class JanelaMenu extends JFrame {
 
         // Painel principal com layout de grade (4 linhas, 1 coluna)
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 1, 10, 15));
+        panel.setLayout(new GridLayout(7, 1, 10, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         // Título/Cabeçalho
@@ -29,6 +29,7 @@ public class JanelaMenu extends JFrame {
         JButton btnProduto = new JButton("Cadastro de Produto");
         JButton btnCategoria = new JButton("Cadastro Categoria");
         JButton btnEntrada = new JButton("Cadastro Entradas");
+        JButton btnEstoque = new JButton("Estoque de Produtos");
         JButton btnSair = new JButton("Sair");
 
         // Personalização visual simples (opcional)
@@ -36,6 +37,7 @@ public class JanelaMenu extends JFrame {
         btnProduto.setFocusable(false);
         btnCategoria.setFocusable(false);
         btnEntrada.setFocusable(false);
+        btnEstoque.setFocusable(false);
         btnSair.setFocusable(false);
 
         // Adicionando ações aos botões
@@ -74,11 +76,19 @@ public class JanelaMenu extends JFrame {
             }
         });
 
+        btnEstoque.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e) {
+                 abrirJanelaEstoque(conexao);
+            }
+        });
+
         // Adiciona os botões ao painel
         panel.add(btnCliente);
         panel.add(btnProduto);
         panel.add(btnCategoria);
         panel.add(btnEntrada);
+        panel.add(btnEstoque);
         panel.add(btnSair);
 
         // Adiciona o painel à janela
@@ -110,6 +120,13 @@ public class JanelaMenu extends JFrame {
     private void abrirCadastroEntrada(Connection conexao) {
         SwingUtilities.invokeLater(() -> {
                  JanelaEntrada telaGrid = new JanelaEntrada(conexao);
+                 telaGrid.setVisible(true);
+                });       
+    }
+
+    private void abrirJanelaEstoque(Connection conexao) {
+        SwingUtilities.invokeLater(() -> {
+                 JanelaEstoque telaGrid = new JanelaEstoque(conexao);
                  telaGrid.setVisible(true);
                 });       
     }

@@ -9,11 +9,84 @@ public class EntradaDAO {
         this.conexao = conexao;    
     }
 
-    public void inserir(Entrada entrada) throws SQLException{
+    /*public void inserir(Entrada entrada) throws SQLException{
         String sql = "INSERT INTO entrada_produto(fk_id_produto, quantidade_produto) VALUES ( ?, ?);";
         try(PreparedStatement stmt = conexao.prepareStatement(sql)){
             stmt.setInt(1, entrada.getFk_id_produto());
             stmt.setInt(2, entrada.getQtd_entrada_produto());
+            stmt.executeUpdate();
+        }
+    }*/
+
+        /*public void inserir(Entrada entrada) throws SQLException {
+            String sql = "WITH nova_entrada AS ( " +
+                         "    INSERT INTO entrada_produto (fk_id_produto, quantidade_produto) " +
+                         "    VALUES (?, ?) " +
+                         "    RETURNING id_entrada, fk_id_produto, quantidade_produto " +
+                         ") " +
+                         "UPDATE estoque " +
+                         "SET quantidade_produto = estoque.quantidade_produto + (SELECT quantidade_produto FROM nova_entrada), " +
+                         "    fk_id_entrada = (SELECT id_entrada FROM nova_entrada) " +
+                         "WHERE produto_id_produto = (SELECT fk_id_produto FROM nova_entrada);";
+        
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setInt(1, entrada.getFk_id_produto());
+                stmt.setInt(2, entrada.getQtd_entrada_produto());
+                stmt.executeUpdate();
+            }
+        }*/
+
+        /*public void inserir(Entrada entrada) throws SQLException {
+            String sql = "WITH nova_entrada AS ( " +
+                            "    INSERT INTO entrada_produto (fk_id_produto, quantidade_produto) " +
+                            "    VALUES (?, ?) " +
+                            "    RETURNING id_entrada, fk_id_produto, quantidade_produto " +
+                            "), " +
+                            "atualiza_estoque AS ( " +
+                            "    UPDATE estoque " +
+                            "    SET quantidade_produto = estoque.quantidade_produto + (SELECT quantidade_produto FROM nova_entrada), " +
+                            "        fk_id_entrada = (SELECT id_entrada FROM nova_entrada) " +
+                            "    WHERE produto_id_produto = (SELECT fk_id_produto FROM nova_entrada) " +
+                            "    RETURNING id_estoque " + 
+                            ") " +
+                            "INSERT INTO estoque (produto_id_produto, quantidade_produto) " +
+                            "SELECT fk_id_produto, quantidade_produto, id_entrada " +
+                            "FROM nova_entrada " +
+                            "WHERE NOT EXISTS (SELECT 1 FROM atualiza_estoque);";
+        
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                
+                // Os índices continuam sendo apenas dois!
+                stmt.setInt(1, entrada.getFk_id_produto());
+                stmt.setInt(2, entrada.getQtd_entrada_produto());
+                
+                stmt.executeUpdate();
+            }
+        }*/
+
+    public void inserir(Entrada entrada) throws SQLException {
+        String sql = "WITH nova_entrada AS ( " +
+                        "    INSERT INTO entrada_produto (fk_id_produto, quantidade_produto) " +
+                        "    VALUES (?, ?) " +
+                        "    RETURNING id_entrada, fk_id_produto, quantidade_produto " +
+                        "), " +
+                        "atualiza_estoque AS ( " +
+                        "    UPDATE estoque " +
+                        "    SET quantidade_produto = estoque.quantidade_produto + (SELECT quantidade_produto FROM nova_entrada), " +
+                        "        fk_id_entrada = (SELECT id_entrada FROM nova_entrada) " +
+                        "    WHERE produto_id_produto = (SELECT fk_id_produto FROM nova_entrada) " +
+                        "    RETURNING id_estoque " +
+                        ") " +
+                        "INSERT INTO estoque (produto_id_produto, quantidade_produto, fk_id_entrada) " +
+                        "SELECT fk_id_produto, quantidade_produto, id_entrada " +
+                        "FROM nova_entrada " +
+                        "WHERE NOT EXISTS (SELECT 1 FROM atualiza_estoque);";
+    
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            
+            stmt.setInt(1, entrada.getFk_id_produto());
+            stmt.setInt(2, entrada.getQtd_entrada_produto());
+            
             stmt.executeUpdate();
         }
     }
@@ -28,7 +101,7 @@ public class EntradaDAO {
                 Entrada e = new Entrada();
                 e.setId_entrada(rs.getInt("id_entrada"));
                 e.setFk_id_produto(rs.getInt("fk_id_produto"));
-                e.setQtd_entrada_produto(rs.getInt("qtd_entrada_produto"));
+                e.setQtd_entrada_produto(rs.getInt("quantidade_produto"));
                 entrada.add(e);
             }
         }
@@ -46,7 +119,7 @@ public class EntradaDAO {
     }
 
     public void excluir(int id) throws SQLException {
-        String sql = "DELETE FROM entrada WHERE entrada = ?";
+        String sql = "DELETE FROM entrada_produto WHERE id_entrada = ?";
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();

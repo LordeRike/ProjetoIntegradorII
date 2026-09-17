@@ -1,7 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
 import javax.swing.*;
 
 public class App {
@@ -10,6 +9,13 @@ public class App {
    private static final String USER = "henrique";
    private static final String PASS = "1234"; 
     public static void main(String[] args) throws Exception {
+        try {
+            // Ativa o tema moderno nativo do SO do computador (Windows/Linux/Mac)
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            // Em caso de inconsistência de tema, mantém a interface padrão
+        }
+        
         try {
             // 1. Estabelece a conexão normalmente 
              Connection conn = DriverManager.getConnection(URL, USER, PASS);

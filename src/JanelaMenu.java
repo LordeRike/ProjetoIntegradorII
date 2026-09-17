@@ -1,22 +1,22 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import javax.swing.*;
 
 public class JanelaMenu extends JFrame {
 
     public JanelaMenu(Connection conexao) {
         // Configurações básicas da janela
         setTitle("Sistema de Gestão - Menu Principal");
-        setSize(400, 300);
+        setSize(700, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centraliza a janela na tela
         setResizable(false);
 
         // Painel principal com layout de grade (4 linhas, 1 coluna)
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(7, 1, 10, 15));
+        panel.setLayout(new GridLayout(8, 1, 10, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
         // Título/Cabeçalho
@@ -30,6 +30,7 @@ public class JanelaMenu extends JFrame {
         JButton btnCategoria = new JButton("Cadastro Categoria");
         JButton btnEntrada = new JButton("Cadastro Entradas");
         JButton btnEstoque = new JButton("Estoque de Produtos");
+        JButton btnVenda = new JButton("Registar Venda");
         JButton btnSair = new JButton("Sair");
 
         // Personalização visual simples (opcional)
@@ -38,6 +39,7 @@ public class JanelaMenu extends JFrame {
         btnCategoria.setFocusable(false);
         btnEntrada.setFocusable(false);
         btnEstoque.setFocusable(false);
+        btnVenda.setFocusable(false);
         btnSair.setFocusable(false);
 
         // Adicionando ações aos botões
@@ -83,12 +85,20 @@ public class JanelaMenu extends JFrame {
             }
         });
 
+        btnVenda.addActionListener(new ActionListener() {
+            @Override 
+            public void actionPerformed(ActionEvent e) {
+                 abrirJanelaVenda(conexao);
+            }
+        });
+
         // Adiciona os botões ao painel
         panel.add(btnCliente);
         panel.add(btnProduto);
         panel.add(btnCategoria);
         panel.add(btnEntrada);
         panel.add(btnEstoque);
+        panel.add(btnVenda);
         panel.add(btnSair);
 
         // Adiciona o painel à janela
@@ -127,6 +137,13 @@ public class JanelaMenu extends JFrame {
     private void abrirJanelaEstoque(Connection conexao) {
         SwingUtilities.invokeLater(() -> {
                  JanelaEstoque telaGrid = new JanelaEstoque(conexao);
+                 telaGrid.setVisible(true);
+                });       
+    }
+
+    private void abrirJanelaVenda(Connection conexao) {
+        SwingUtilities.invokeLater(() -> {
+                 JanelaVenda telaGrid = new JanelaVenda(conexao);
                  telaGrid.setVisible(true);
                 });       
     }

@@ -12,7 +12,6 @@ public class Produto {
         this.nome_produto = nome_produto;
         this.categoria_produto = categoria_produto;
     }
-
     
 
     public Produto(String descricao_categoria, int id_categoria) {
